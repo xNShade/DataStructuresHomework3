@@ -1,8 +1,16 @@
-//Function that gets the name of the file to be read in from user agrv argc[]
-//Reads in data and checks validity. Between 0 and 99
-//Creates stack file. Average of the data
-// AND/OR
-//Creates queue file. Average of the data
+//DataStructures Homework 3
+//
+// Gets users input from command prompt or through program and seperates the values based on the given assignment
+//
+// Programmer: Ryan Shoemake
+//
+// Date: 7/3/2018
+//
+// Log:
+// 7/3/2018 - Completed but not happy with while loop dealing with erroneous strings.
+// 7/5/2018 - Fixed while loop to include any types of data. Even garbled.
+//
+///////////////////////////
 
 #include <iostream>
 #include <fstream>
@@ -70,20 +78,24 @@ bool GetUserInput(ifstream &YourFile) {
 void ReadFile(ifstream &YourFile, stack<int> &MyStack, queue<int> &MyQueue) {
 	// This will be a while loop that will go until EOF and deposit the variables in whichever spot they
 	//need to be in.
-	string denied;
 	int x;
-	while (YourFile >> denied) {
-		if (isdigit(denied[0])) {			// This feels like a bandaid way to catch the 0's that will get caught and output
-			x = atoi(denied.c_str());		//. Writing the code like this works fine for this data set.. but if you get data
-			if (x <= 49 && x >= 0) {		//that looks something like 0cat, it will mess up. This could probably be fixed by
-				MyQueue.push(x);			//checking every element of the string.
-				//cout << "Did Queue for " << x << endl;	//DEBUG
-			}
-			if (x >= 50 && x <= 99) {
-				MyStack.push(x);
-				//cout << "Did Stack " << x << endl;	//DEBUG
-			}
+
+	while (!YourFile.eof()) {	
+		YourFile >> x;
+		if (YourFile.fail() || x < 0 || x > 99) {
+			//cout << "Fail with " << x;	//DEBUG
+			YourFile.clear();
+			YourFile.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
+		else if (x <= 49 && x >= 0) {		
+			MyQueue.push(x);			
+			//cout << "Did Queue for " << x << endl;	//DEBUG
+		}
+		else if (x >= 50 && x <= 99) {
+			MyStack.push(x);
+			//cout << "Did Stack " << x << endl;	//DEBUG
+		}
+		
 		//else
 			//cout << denied << " is trash\n";	//DEBUG
 	}
